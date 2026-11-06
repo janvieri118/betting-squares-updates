@@ -14,7 +14,8 @@
     --top: #02122e;
     --brand: #0e2857;
     --inv-card: #00346b;
-    --strip: #ace6ff;
+    --strip: #f8fafc;   /* Figma card-2: the date row under the matchup */
+    --vs: #bec1c4;
     --page: #f2f5f9;
     --card: #feffff;
     --card-border: #e7ecf3;
@@ -105,9 +106,9 @@
   main { padding: 10px 0 90px; }
   .stack { display: flex; flex-direction: column; gap: 10px; }
 
-  /* Game bar */
-  .game { border-radius: 10px; overflow: hidden; }
-  .game-top { position: relative; background: var(--inv-card); color: #fff; padding: 18px 20px; display: flex; justify-content: center; }
+  /* Game bar (Figma: white Section card, dark team names, gray VS) */
+  .game { border-radius: 10px; overflow: hidden; background: var(--card); }
+  .game-top { position: relative; background: var(--card); color: var(--fg-high); padding: 18px 20px; display: flex; justify-content: center; }
   .teams { display: flex; align-items: center; gap: 220px; }
   .team { display: flex; align-items: center; gap: 12px; font-family: var(--nexa); font-weight: 800; font-size: 24px; line-height: 25.5px; white-space: nowrap; }
   .badge-team { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 13px; letter-spacing: 0; box-shadow: 0 0 0 2px rgba(255, 255, 255, .2); }
@@ -115,6 +116,7 @@
   .badge-team.dal { background: var(--dal); }
   .vs-mark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
   .vs-mark svg { width: 35px; height: 48px; }
+  .vs-mark path { fill: var(--vs); }
   .score { display: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-family: var(--nexa); font-weight: 900; font-size: 32px; letter-spacing: .5px; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .score i { font-style: normal; opacity: .6; margin: 0 8px; }
   body:not(.is-pre) .score { display: block; }
@@ -332,6 +334,7 @@
     .back { min-height: 24px; min-width: 0; padding: 0 10px; gap: 4px; font-size: 12px; letter-spacing: .36px; }
     .back svg { width: 12px; height: 12px; }
 
+    .game { border-radius: 8px; }
     .game-top { height: 44px; padding: 0 14px; align-items: center; }
     .teams { gap: 8px; }
     .team { font-size: 14px; letter-spacing: -.42px; }

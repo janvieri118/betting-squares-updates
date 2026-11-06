@@ -6,7 +6,7 @@
 <title>BetUS Betting Squares – Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <!-- Nexa is the design font (licensed); Montserrat is the closest free fallback until Nexa webfonts are added -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;600;700;800;900&family=Roboto:wght@400;500;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;600;700;800;900&family=Roboto:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
   /* Tokens from the Betting Squares Redesign Figma (ADS) */
   :root {
@@ -14,7 +14,9 @@
     --top: #02122e;
     --brand: #0e2857;
     --inv-card: #00346b;
-    --strip: #ace6ff;
+    --card-2: #f8fafc;
+    --link: #0072eb;
+    --vs: #d3d5d7;
     --page: #f2f5f9;
     --card: #feffff;
     --card-border: #e7ecf3;
@@ -107,64 +109,66 @@
   .hero img { width: 100%; height: auto; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-  .tabs { display: flex; height: 40px; }
-  .tabs button { height: 40px; padding: 0 16px; border: 0; border-bottom: 4px solid transparent; background: none; font-family: var(--nexa); font-weight: 800; font-size: 18px; color: var(--fg-mid); cursor: pointer; }
-  .tabs button[aria-selected="true"] { color: var(--fg-high); border-bottom-color: var(--primary); }
-  .tabs button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
-  /* My Grids: not a league, so it sits apart on the right as a pill */
-  .tabs { align-items: center; }
-  .tabs .my-tab { margin-left: auto; height: 36px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border-medium); border-radius: 999px; font-size: 16px; color: var(--fg-high); white-space: nowrap; }
+  /* My Grids: not a league, so it sits apart on the right as a pill (no Figma frame yet) */
+  .tabs { display: flex; align-items: center; justify-content: flex-end; }
+  .tabs button { border: 0; background: none; font-family: var(--nexa); font-weight: 800; cursor: pointer; }
+  .tabs button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .tabs .my-tab { height: 36px; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border-medium); border-radius: 999px; font-size: 16px; color: var(--fg-high); white-space: nowrap; }
   .tabs .my-tab:hover { background: var(--fill-low); }
-  .tabs .my-tab[aria-selected="true"] { border-color: var(--primary); background: var(--primary-muted); color: var(--primary); }
-  .tabs .my-tab:focus-visible { outline-offset: 2px; }
+  .tabs .my-tab[aria-pressed="true"] { border-color: var(--primary); background: var(--primary-muted); color: var(--primary); }
   .my-tab svg { width: 18px; height: 18px; flex: none; }
   .my-count { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--primary); color: #fff; font-family: var(--nexa); font-weight: 700; font-size: 12px; display: grid; place-items: center; }
 
+  /* One section per league (Figma: Odds Submenu + Grid tabs, then a slider of matchup cards) */
   .games { display: flex; flex-direction: column; gap: 16px; }
-  .game { display: flex; flex-direction: column; gap: 12px; }
-  .game-head { border-radius: 10px; overflow: hidden; }
-  .game-top { height: 60px; padding: 0 20px; background: var(--inv-card); color: #fff; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
-  .matchup { display: flex; align-items: center; gap: 16px; }
-  .team { display: flex; align-items: center; gap: 12px; font-family: var(--nexa); font-weight: 800; font-size: 18px; letter-spacing: -.54px; white-space: nowrap; }
-  .badge-team { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--nexa); font-weight: 800; font-size: 14px; letter-spacing: 0; box-shadow: 0 0 0 2px rgba(255, 255, 255, .2); }
-  .team .short { display: none; }
-  .vs { width: 23px; height: 33px; flex: none; }
-  .collapse { width: 16px; height: 16px; border: 0; background: none; cursor: pointer; display: grid; place-items: center; }
-  .collapse svg { width: 12px; height: 12px; transition: transform .2s; }
-  .game.closed .collapse svg { transform: rotate(180deg); }
-  .game.closed .slider { display: none; }
-  .date-strip { height: 42px; padding: 0 14px; background: var(--strip); display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 2px rgba(0, 0, 0, .05); font-family: var(--nexa); font-weight: 800; font-size: 14px; text-transform: uppercase; }
-  .date-strip small { font-weight: 400; font-size: 12px; color: var(--fg-mid); text-transform: none; }
+  .league { display: flex; flex-direction: column; gap: 11px; }
+  .league-top { height: 50px; padding: 0 20px; border-radius: 8px 8px 0 0; background: var(--inv-card); color: #fff; display: flex; align-items: center; gap: 9px; }
+  .league-top h2 { font-family: var(--nexa); font-weight: 800; font-size: 20px; line-height: 21.6px; }
+  .league-count { height: 16px; padding: 0 6px; border-radius: 4px; background: rgba(255, 255, 255, .2); color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 10px; line-height: 16px; white-space: nowrap; }
+  .grid-tabs { padding: 14px 14px 14px; border-radius: 0 0 10px 10px; background: var(--card); display: flex; overflow-x: auto; scrollbar-width: none; }
+  .grid-tabs::-webkit-scrollbar { display: none; }
+  .grid-tabs button { flex: none; height: 32px; min-width: 64px; padding: 0 20px 10px; border: 0; border-bottom: 3px solid transparent; background: none; font-family: var(--nexa); font-weight: 800; font-size: 14px; line-height: 1.2; color: var(--fg-mid); opacity: .3; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .grid-tabs button:hover { opacity: .6; }
+  .grid-tabs button[aria-selected="true"] { color: var(--fg-high); opacity: 1; border-bottom-color: var(--primary); }
+  .grid-tabs button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
 
   .slider { position: relative; }
   .track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; padding: 0 0 24px; margin-bottom: -24px; }
   .track::-webkit-scrollbar { display: none; }
-  .nav-btn { position: absolute; top: 112px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; cursor: pointer; z-index: 2; }
+  .nav-btn { position: absolute; top: 134px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; cursor: pointer; z-index: 2; }
   .nav-btn svg { width: 40px; height: 40px; }
   .nav-btn.prev { left: -22px; }
   .nav-btn.prev svg { transform: scaleX(-1); }
   .nav-btn.next { right: -22px; }
   .nav-btn[hidden] { display: none; }
 
-  .gcard { flex: 0 0 613px; width: 613px; min-width: 0; scroll-snap-align: start; display: flex; flex-direction: column; gap: 18px; padding: 20px 28px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--shadow-card); }
-  .gcard-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  .gcard-title { font-family: var(--nexa); font-weight: 800; font-size: 18px; letter-spacing: -.54px; }
-  .badge-open { height: 24px; padding: 0 8px; border-radius: 6px; background: #3fb100; color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 14px; display: grid; place-items: center; }
-  .stats { height: 76px; padding: 0 12px; border: 1px solid var(--card-border); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; }
-  .stat { display: flex; align-items: center; gap: 8px; }
-  .stat-ico { flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--fill-low); display: grid; place-items: center; }
-  .stat-ico svg { width: 20px; height: 20px; }
-  .stat-label { font-size: 14px; color: var(--fg-low); white-space: nowrap; }
-  .stat-value { margin-top: 6px; font-family: var(--nexa); font-weight: 800; font-size: 20px; white-space: nowrap; }
-  .stat-value.jade { color: var(--jade); }
-  .stat-line { width: 1px; align-self: stretch; margin: 1px 0; background: var(--card-border); }
-  .progress-head { display: flex; justify-content: space-between; font-size: 14px; line-height: 12px; color: var(--fg-mid); }
-  .progress-head strong { font-weight: 800; color: var(--fg-high); }
-  .bar { height: 5px; margin: 8px 0; border-radius: 999px; background: var(--card-border); overflow: hidden; }
-  .bar i { display: block; height: 100%; border-radius: 999px; background: var(--primary); }
-  .progress-foot { font-size: 12px; line-height: 12px; color: var(--fg-low); }
-  .gcard .btn { width: 100%; }
+  /* Matchup card (Figma: Cards Updated, Desktop 409px / Mobile 334px) */
+  .gcard { flex: 0 0 409px; width: 409px; min-width: 0; scroll-snap-align: start; display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; overflow: hidden; }
+  .gcard-top { height: 49px; padding: 0 24px; background: var(--card-2); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .gdate { font-size: 14px; line-height: 1.2; color: var(--fg-mid); white-space: nowrap; }
+  .gdate b { font-weight: 800; color: var(--fg-high); }
+  .badge-open { height: 24px; padding: 0 8px; border-radius: 6px; background: #3fb100; color: #feffff; font-family: var(--nexa); font-weight: 700; font-size: 14px; display: grid; place-items: center; white-space: nowrap; }
   .badge-open.full { background: var(--fg-mid); }
+  .gcard-body { flex: 1; padding: 14px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .gchips { display: flex; gap: 10px; }
+  .gchip { height: 26px; padding: 0 8px; border: 1px solid var(--border-low); border-radius: 6px; background: var(--fill-low); display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 1.2; color: var(--fg-mid); white-space: nowrap; }
+  .gchip b { font-weight: 700; color: var(--fg-high); }
+  .gchip b.xb { font-weight: 800; }
+  .gteams { display: flex; flex-direction: column; gap: 6px; }
+  .gteam { display: flex; align-items: center; gap: 16px; font-family: var(--nexa); font-weight: 800; font-size: 18px; line-height: 1.2; color: var(--fg-high); white-space: nowrap; min-width: 0; }
+  .gteam span:last-child { overflow: hidden; text-overflow: ellipsis; }
+  .gteam .badge-team { width: 40px; height: 40px; font-size: 16px; letter-spacing: .48px; }
+  .gteam .badge-team.long { font-size: 13px; letter-spacing: 0; }   /* 3-letter codes fit with the Montserrat fallback */
+  .badge-team { flex: none; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: var(--nexa); font-weight: 800; }
+  .gvs { display: flex; align-items: center; gap: 10px; padding-left: 5px; }
+  .gvs svg { width: 23.3px; height: 32.6px; flex: none; }
+  .gvs svg path { fill: var(--vs); }
+  .gvs i, .gsep { flex: 1; height: 1px; background: var(--card-border); }
+  .gsep { flex: none; margin: 8px 0 8px 5px; }
+  .view-link { height: 28px; display: inline-flex; align-items: center; gap: 4px; align-self: flex-start; font-family: var(--nexa); font-weight: 800; font-size: 14px; line-height: 1.5; color: var(--link); text-transform: uppercase; }
+  .view-link svg { width: 14px; height: 14px; margin-right: 6px; }
+  .view-link:hover { text-decoration: underline; }
+  .view-link:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
   /* ===== My Grids (no Figma frame yet: built from the Grid Overview card parts) ===== */
   .my-summary { display: flex; flex-direction: column; gap: 18px; padding: 20px 28px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--shadow-card); }
   .my-title { font-family: var(--nexa); font-weight: 800; font-size: 22px; letter-spacing: -.66px; }
@@ -242,8 +246,6 @@
     .container { width: calc(100% - 16px); }
     main { padding: 10px 0 40px; gap: 8px; }
     .hero { margin: 0 4px 4px; }
-    .tabs { height: 36px; padding: 6px 0; }
-    .tabs button { height: 24px; padding: 0 12px; border-bottom-width: 2px; font-size: 12px; }
     .tabs .my-tab { height: 26px; padding: 0 8px; gap: 4px; font-size: 12px; }
     .my-tab svg { width: 14px; height: 14px; }
     .my-count { min-width: 16px; height: 16px; padding: 0 4px; font-size: 10px; }
@@ -258,26 +260,26 @@
     .my-date, .my-sq-label { font-size: 12px; }
     .my-sq-label { height: 36px; }
     .chip { height: 22px; padding: 0 8px; font-size: 12px; }
-    .games { gap: 8px; }
-    .game { gap: 8px; }
-    .game-top { height: 44px; padding: 0 14px; }
-    .matchup { gap: 8px; }
-    .team { font-size: 14px; letter-spacing: -.42px; }
-    .team .full { display: none; }
-    .team .short { display: inline; }
-    .badge-team { width: 24px; height: 24px; font-size: 10px; }
-    .date-strip { height: 34px; font-size: 12px; }
-    .date-strip small { font-weight: 200; font-size: 10px; }
-    .track { gap: 8px; }
-    .gcard { flex-basis: 334px; width: 334px; padding: 12px; gap: 12px; }
-    .gcard-title { font-size: 14px; letter-spacing: -.42px; }
-    .badge-open { height: 20px; padding: 0 6px; font-size: 12px; }
     .stats { height: auto; display: grid; grid-template-columns: 1fr 1fr; padding: 0; }
     .stats .stat { height: 60px; padding: 0 12px; }
     .stats .stat:nth-of-type(2n) { padding-left: 20px; border-left: 1px solid var(--card-border); }
     .stats .stat:nth-of-type(n+3) { border-top: 1px solid var(--card-border); }
     .stats .stat-line { display: none; }
     .stat-value { margin-top: 4px; }
+    .games { gap: 8px; }
+    .league { gap: 18px; }
+    .league-top { height: auto; padding: 10px 14px; justify-content: space-between; }
+    .league-top h2 { font-size: 18px; }
+    .grid-tabs { padding: 14px; }
+    .grid-tabs button { height: 24px; min-width: 56px; padding: 0 12px 10px; border-bottom-width: 2px; font-size: 12px; }
+    .track { gap: 8px; }
+    .gcard { flex-basis: 334px; width: 334px; }
+    .gchip { height: 20px; padding: 0 6px; }
+    .gteams { gap: 4px; }
+    .gteam { gap: 8px; font-size: 16px; }
+    .gteam .badge-team { width: 38px; height: 38px; font-size: 14px; letter-spacing: .42px; }
+    .gteam .badge-team.long { font-size: 12px; letter-spacing: 0; }
+    .view-link { height: 26px; align-self: stretch; justify-content: space-between; }
 
     .foot { width: auto; padding: 56px 20px; gap: 32px; }
     .social { gap: 24px; }
@@ -366,15 +368,11 @@
     </picture>
   </a>
 
-  <div class="tabs" role="tablist" aria-label="Leagues">
-    <button type="button" role="tab" aria-selected="true" data-league="NFL">NFL</button>
-    <button type="button" role="tab" aria-selected="false" data-league="NCAAF">NCAAF</button>
-    <button type="button" role="tab" aria-selected="false" data-league="NBA">NBA</button>
-    <button type="button" role="tab" aria-selected="false" data-league="NCAAB">NCAAB</button>
-    <button type="button" role="tab" aria-selected="false" data-league="MY" class="my-tab"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2.5 7.5H17.5M2.5 12.5H17.5M7.5 2.5V17.5M12.5 2.5V17.5M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>My Grids<span class="my-count" id="myCount" hidden></span></button>
+  <div class="tabs">
+    <button type="button" aria-pressed="false" class="my-tab"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2.5 7.5H17.5M2.5 12.5H17.5M7.5 2.5V17.5M12.5 2.5V17.5M4.16667 2.5H15.8333C16.7538 2.5 17.5 3.24619 17.5 4.16667V15.8333C17.5 16.7538 16.7538 17.5 15.8333 17.5H4.16667C3.24619 17.5 2.5 16.7538 2.5 15.8333V4.16667C2.5 3.24619 3.24619 2.5 4.16667 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>My Grids<span class="my-count" id="myCount" hidden></span></button>
   </div>
 
-  <div class="games" id="games" role="tabpanel"></div>
+  <div class="games" id="games"></div>
 </main>
 
 <footer>
@@ -427,7 +425,6 @@
   const ARROW_R = "<svg viewBox=\"0 0 20 20\" fill=\"none\"><path d=\"M4.16667 10H15.8333M10 15.8333L15.8333 10L10 4.16667\" stroke=\"white\" stroke-width=\"1.33\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>";
   const NEXT = '<svg viewBox="0 0 40 40" fill="none"><path d="M0 20C0 8.95431 8.95431 0 20 0C31.0457 0 40 8.95431 40 20C40 31.0457 31.0457 40 20 40C8.95431 40 0 31.0457 0 20Z" fill="#E7ECF3"/><path d="M17.5 25L22.5 20L17.5 15" stroke="#282E38" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const CHEVRON_DOWN = '<svg viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const CHEVRON = '<svg viewBox="0 0 12 12" fill="none"><path d="M9.5 4.5L6 8L2.5 4.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   // Contest data lives in games-data.js (shared with the board page)
   const GAMES = { NFL: [], NCAAF: [], NBA: [], NCAAB: [] };
@@ -438,30 +435,31 @@
   const cashText = n => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   document.querySelectorAll(".cash-value").forEach(e => { e.textContent = cashText(STORE.cash()); });
 
-  const team = ([code, city, name, color, short = name], side) => {
-    const badge = `<span class="badge-team" style="background:${color}">${code}</span>`;
-    const label = `<span><span class="full">${city} ${name}</span><span class="short">${short}</span></span>`;
-    return `<div class="team">${side === "home" ? badge + label : label + badge}</div>`;
-  };
 
+  const ARROW_LINK = '<svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.917 7h8.166M7 2.917 11.083 7 7 11.083" stroke="#0072EB" stroke-width="1.17" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const cardTeam = ([code, city, name, color]) =>
+    `<div class="gteam"><span class="badge-team${code.length > 2 ? " long" : ""}" style="background:${color}">${code}</span><span>${city} ${name}</span></div>`;
+  // Matchup card (Figma: Cards Updated): one game, showing the grid picked in its league's Grid tabs
   const card = (g, c, sold = soldFor(g, c), full = sold >= 100) => `
-    <article class="gcard" aria-label="${g.home[2]} vs ${g.away[2]}, grid ${c.grid}">
-      <div class="gcard-head"><h3 class="gcard-title">Grid Overview</h3><span class="badge-open${full ? " full" : ""}">${full ? "Sold Out" : "Open"}</span></div>
-      <div class="stats">
-        <div class="stat"><span class="stat-ico">${ICON.dollar}</span><div><div class="stat-label">Square Price</div><div class="stat-value">$${c.price}</div></div></div>
-        <span class="stat-line"></span>
-        <div class="stat"><span class="stat-ico">${ICON.grid}</span><div><div class="stat-label">Grid</div><div class="stat-value">${c.grid}</div></div></div>
-        <span class="stat-line"></span>
-        <div class="stat"><span class="stat-ico">${ICON.users}</span><div><div class="stat-label">Squares Sold</div><div class="stat-value">${sold}/100</div></div></div>
-        <span class="stat-line"></span>
-        <div class="stat"><span class="stat-ico">${ICON.trophy}</span><div><div class="stat-label">Prize Pool</div><div class="stat-value jade">$${c.price * 100}</div></div></div>
+    <article class="gcard" aria-label="${g.home[1]} ${g.home[2]} vs ${g.away[1]} ${g.away[2]}, grid ${c.grid}">
+      <div class="gcard-top">
+        <span class="gdate"><b>${g.date.replace(" | ", " • ")}</b> EST</span>
+        <span class="badge-open${full ? " full" : ""}">${full ? "Sold Out" : "Open"}</span>
       </div>
-      <div>
-        <div class="progress-head"><span>Game progress</span><strong>${sold}% Sold</strong></div>
-        <div class="bar" role="progressbar" aria-valuenow="${sold}" aria-valuemin="0" aria-valuemax="100" aria-label="Squares sold"><i style="width:${sold}%"></i></div>
-        <div class="progress-foot">${full ? "All squares are sold" : `${100 - sold} squares are still available`}</div>
+      <div class="gcard-body">
+        <div class="gchips">
+          <span class="gchip">Grid <b class="xb">${c.grid}</b></span>
+          <span class="gchip">Square <b>$${c.price}</b></span>
+          <span class="gchip">Prize Pool <b>$${c.price * 100}</b></span>
+        </div>
+        <div class="gteams">
+          ${cardTeam(g.home)}
+          <div class="gvs" aria-label="versus">${VS}<i></i></div>
+          ${cardTeam(g.away)}
+        </div>
+        <span class="gsep"></span>
+        <a class="view-link" href="index.html?game=${g.id}&amp;grid=${c.grid}">View Squares ${ARROW_LINK}</a>
       </div>
-      <a class="btn btn-primary" href="index.html?game=${g.id}&amp;grid=${c.grid}">${full ? "View Squares" : "Pick Squares"} ${ARROW_R}</a>
     </article>`;
 
   // ===== My Grids: every grid with squares bought in this browser, soonest game first =====
@@ -507,7 +505,7 @@
     const entries = myEntries();
     if (!entries.length) {
       box.innerHTML = `<div class="empty"><strong>You don't have any squares yet</strong>Pick squares in any grid and they'll show up here, so you can follow all your games in one place.<br><button type="button" class="btn btn-primary" id="browseBtn">Browse Games ${ARROW_R}</button></div>`;
-      document.getElementById("browseBtn").addEventListener("click", () => document.querySelector('.tabs [data-league="NFL"]').click());
+      document.getElementById("browseBtn").addEventListener("click", () => show(false));
       return;
     }
     const squares = entries.reduce((n, e) => n + e.keys.length, 0);
@@ -538,58 +536,62 @@
   myCount.textContent = n; myCount.hidden = !n;
   document.querySelector(".my-tab").setAttribute("aria-label", `My Grids, ${n} grid${n === 1 ? "" : "s"}`);
 
-  function render(league) {
-    const box0 = document.getElementById("games");
-    if (league === "MY") { renderMine(box0); return; }
-    const list = GAMES[league];
-    const box = document.getElementById("games");
-    if (!list.length) { box.innerHTML = `<p class="empty">No ${league} squares games are open right now.</p>`; return; }
-    box.innerHTML = list.map((g, i) => `
-      <section class="game" aria-label="${g.home[1]} ${g.home[2]} vs ${g.away[1]} ${g.away[2]}">
-        <div class="game-head">
-          <div class="game-top">
-            <div class="matchup">${team(g.home, "home")}<span class="vs" aria-label="versus">${VS}</span>${team(g.away, "away")}</div>
-            <button type="button" class="collapse" aria-expanded="true" aria-controls="slider-${i}" aria-label="Hide grids">${CHEVRON}</button>
-          </div>
-          <div class="date-strip">${g.date} <small>EST</small></div>
+  // All games: one section per league with Grid 1/2/3 tabs; each tab slides through that league's games
+  function renderLeagues(box) {
+    box.innerHTML = Object.entries(GAMES).filter(([, list]) => list.length).map(([league, list]) => {
+      const grids = [...new Set(list.flatMap(g => g.grids.map(c => c.grid)))].sort((x, y) => x - y);
+      return `
+      <section class="league" aria-labelledby="lg-${league}" data-league="${league}">
+        <div>
+          <div class="league-top"><h2 id="lg-${league}">${league}</h2><span class="league-count">${list.length} GAME${list.length === 1 ? "" : "S"}</span></div>
+          <div class="grid-tabs" role="tablist" aria-label="${league} grids">${grids.map((n, i) =>
+            `<button type="button" role="tab" aria-selected="${i === 0}" aria-controls="track-${league}" data-grid="${n}">Grid ${n}</button>`).join("")}</div>
         </div>
-        <div class="slider" id="slider-${i}">
-          <button type="button" class="nav-btn prev" aria-label="Previous grids">${NEXT}</button>
-          <div class="track">${g.grids.map(c => card(g, c)).join("")}</div>
-          <button type="button" class="nav-btn next" aria-label="Next grids">${NEXT}</button>
+        <div class="slider">
+          <button type="button" class="nav-btn prev" aria-label="Previous games">${NEXT}</button>
+          <div class="track" id="track-${league}" role="tabpanel"></div>
+          <button type="button" class="nav-btn next" aria-label="Next games">${NEXT}</button>
         </div>
-      </section>`).join("");
-    box.querySelectorAll(".game").forEach(sec => {
+      </section>`;
+    }).join("");
+    box.querySelectorAll(".league").forEach(sec => {
+      const list = GAMES[sec.dataset.league];
       const track = sec.querySelector(".track");
       const prev = sec.querySelector(".prev"), next = sec.querySelector(".next");
       const sync = () => {
         prev.hidden = track.scrollLeft <= 2;
         next.hidden = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
       };
-      const step = () => track.querySelector(".gcard").offsetWidth + 12;
+      const fill = grid => {
+        track.innerHTML = list.flatMap(g => g.grids.filter(c => c.grid === grid).map(c => card(g, c))).join("");
+        track.scrollLeft = 0;
+        sync();
+      };
+      const step = () => track.querySelector(".gcard").offsetWidth + parseFloat(getComputedStyle(track).columnGap);
       prev.addEventListener("click", () => track.scrollBy({ left: -step() }));
       next.addEventListener("click", () => track.scrollBy({ left: step() }));
       track.addEventListener("scroll", sync, { passive: true });
       window.addEventListener("resize", sync);
-      sync();
-      const btn = sec.querySelector(".collapse");
-      btn.addEventListener("click", () => {
-        const closed = sec.classList.toggle("closed");
-        btn.setAttribute("aria-expanded", !closed);
-        btn.setAttribute("aria-label", closed ? "Show grids" : "Hide grids");
-      });
-      // The whole blue bar toggles the section; the chevron button stays for keyboard and screen readers
-      sec.querySelector(".game-top").addEventListener("click", e => { if (!btn.contains(e.target)) btn.click(); });
+      const tabs = sec.querySelectorAll(".grid-tabs button");
+      tabs.forEach(t => t.addEventListener("click", () => {
+        tabs.forEach(x => x.setAttribute("aria-selected", x === t));
+        fill(+t.dataset.grid);
+      }));
+      fill(+tabs[0].dataset.grid);
     });
   }
 
-  document.querySelectorAll(".tabs button").forEach(t => t.addEventListener("click", () => {
-    document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === t));
-    render(t.dataset.league);
-    history.replaceState(null, "", t.dataset.league === "MY" ? "#my-grids" : location.pathname + location.search);
-  }));
+  // The My Grids pill switches between all games and the user's grids
+  const myTab = document.querySelector(".my-tab");
+  function show(mine) {
+    myTab.setAttribute("aria-pressed", mine);
+    const box = document.getElementById("games");
+    if (mine) renderMine(box); else renderLeagues(box);
+    history.replaceState(null, "", mine ? "#my-grids" : location.pathname + location.search);
+  }
+  myTab.addEventListener("click", () => show(myTab.getAttribute("aria-pressed") !== "true"));
   // games.html#my-grids opens straight on My Grids (the board's All Games link comes back here)
-  if (location.hash === "#my-grids") document.querySelector(".my-tab").click(); else render("NFL");
+  show(location.hash === "#my-grids");
 
   const FOOT = [
     ["Sportsbook", ["Online Sportsbook", "NFL Odds", "NBA Odds", "MLB Odds", "World Series Odds", "NHL Odds", "NCAAF Odds", "NCAAB Odds", "UEFA Champions League Odds", "Nascar Odds", "Olympic Games Odds", "French Open Odds", "Live Betting"]],
