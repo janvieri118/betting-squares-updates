@@ -170,6 +170,19 @@
   .view-link:hover { text-decoration: underline; }
   .view-link:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
   /* ===== My Grids (no Figma frame yet: built from the Grid Overview card parts) ===== */
+  .stats { height: 76px; padding: 0 12px; border: 1px solid var(--card-border); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .stat { display: flex; align-items: center; gap: 8px; }
+  .stat-ico { flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--fill-low); display: grid; place-items: center; }
+  .stat-ico svg { width: 20px; height: 20px; }
+  .stat-label { font-size: 14px; color: var(--fg-low); white-space: nowrap; }
+  .stat-value { margin-top: 6px; font-family: var(--nexa); font-weight: 800; font-size: 20px; white-space: nowrap; }
+  .stat-value.jade { color: var(--jade); }
+  .stat-line { width: 1px; align-self: stretch; margin: 1px 0; background: var(--card-border); }
+  .progress-head { display: flex; justify-content: space-between; font-size: 14px; line-height: 12px; color: var(--fg-mid); }
+  .progress-head strong { font-weight: 800; color: var(--fg-high); }
+  .bar { height: 5px; margin: 8px 0; border-radius: 999px; background: var(--card-border); overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 999px; background: var(--primary); }
+  .progress-foot { font-size: 12px; line-height: 12px; color: var(--fg-low); }
   .my-summary { display: flex; flex-direction: column; gap: 18px; padding: 20px 28px; background: var(--card); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--shadow-card); }
   .my-title { font-family: var(--nexa); font-weight: 800; font-size: 22px; letter-spacing: -.66px; }
   .my-sub { margin-top: 4px; font-size: 14px; color: var(--fg-low); }
